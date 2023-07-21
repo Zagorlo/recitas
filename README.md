@@ -27,6 +27,8 @@ curl --location --request POST 'http://localhost:8000/twirp/api.ApiGateway/Regis
 {
     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJfZXhwIjoxNjkyNTY4MjAxLCJfZ2RuIjoiX2Nhc3RpbmdfcmVjaXBlcyIsIl91c2VyX25hbWUiOiI0ZDlhNzE5MC1iN2VlLTQxZmYtODhlOS1iNDIwZGFiYzZjNWIifQ.soQHxgaNmxhV1ToGuESHQz5TEZb1ZAHaFoEJ8r7pJrRkvL83gPJijvFGsG4c4SvTKG9YnIkFn3SoK5teAiAy6A"
 }
+Этот токен (он потом используется в примерах) был создан для пользователя ilia7 (который не создаётся автоматически). Пользователя нет, а токен рабочий. Так как функционала удаления пользователей нет, то это не баг, а фича.)
+Так-то проверку того, что пользователь токена всё ещё существует - не проблема.
 
 2.4. При логине уже существующего пользователя в том же формате возвращается токен. Запрос на логин:
 curl --location --request POST 'http://localhost:8000/twirp/api.ApiGateway/Login' \
