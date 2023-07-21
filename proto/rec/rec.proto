@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package api;
+
+import "validate/validate.proto";
+
+option go_package = "recitas/proto/rec";
+
+message CreateRecipeRequest {
+  string name = 1 [(validate.rules).string.min_len = 1];
+  string description = 2 [(validate.rules).string.min_len = 1];
+  repeated string ingredients = 3 [(validate.rules).repeated = {
+    unique: true
+    min_items: 1
+  }];
+  repeated Step steps = 4 [(validate.rules).repeated = {
+    min_items: 1
+  }];
+}
+
+message CreateRecipeResponse {
+  uint32 id = 1 [(validate.rules).uint32.gte = 1];
+}
+
+message UpdateRecipeRequest {
+  string name = 1 [(validate.rules).string.min_len = 1];
+  string description = 2 [(validate.rules).string.min_len = 1];
+  repeated string ingredients = 3 [(validate.rules).repeated = {
+    unique: true
+    min_items: 1
+  }];
+  repeated Step steps = 4 [(validate.rules).repeated = {
+    min_items: 1
+  }];
+  uint32 id = 5 [(validate.rules).uint32.gte = 1];
+}
+
+message UpdateRecipeResponse {
+  uint32 id = 1 [(validate.rules).uint32.gte = 1];
+}
+
+message DeleteRecipeRequest {
+  uint32 id = 1 [(validate.rules).uint32.gte = 1];
+}
+
+message DeleteRecipeResponse {}
+
+message RegisterRequest {
+  string login = 1 [(validate.rules).string.min_len = 1];
+  string password = 2 [(validate.rules).string.min_len = 1];
+}
+
+message RegisterResponse {
+  string token = 1;
+}
+
+message LoginRequest {
+  string login = 1 [(validate.rules).string.min_len = 1];
+  string password = 2 [(validate.rules).string.min_len = 1];
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message GetAllRecipesRequest {
+  repeated string ingredients = 1;
+  uint32 min_time = 2;
+  uint32 max_time = 3;
+  string time_order = 4;
+}
+
+message GetAllRecipesResponse {
+  repeated GetRecipeResponse recipes = 1;
+}
+
+message GetAllRecipesByUserRequest {
+  repeated string ingredients = 1;
+  uint32 min_time = 2;
+  uint32 max_time = 3;
+  string time_order = 4;
+}
+
+message GetAllRecipesByUserResponse {
+  repeated GetRecipeResponse recipes = 1;
+}
+
+message GetRecipeRequest {
+  uint32 id = 1 [(validate.rules).uint32.gte = 1];
+}
+
+message GetRecipeResponse {
+  uint32 id = 1 [(validate.rules).uint32.gte = 1];
+  string name = 2 [(validate.rules).string.min_len = 1];
+  string description = 3 [(validate.rules).string.min_len = 1];
+  repeated string ingredients = 4 [(validate.rules).repeated = {
+    unique: true
+    min_items: 1
+  }];
+  repeated Step steps = 5 [(validate.rules).repeated = {
+    min_items: 1
+  }];
+  uint32 total_time = 6 [(validate.rules).uint32.gte = 1];
+}
+
+message Step {
+  string description = 1 [(validate.rules).string.min_len = 1];
+  uint32 duration = 2 [(validate.rules).uint32.gte = 1];
+}
+//
+//message GetRecipeResponse {
+//
+//}
+
+service ApiGateway {
+  rpc GetAllRecipesByUser (GetAllRecipesByUserRequest) returns (GetAllRecipesByUserResponse);
+  rpc GetAllRecipes (GetAllRecipesRequest) returns (GetAllRecipesResponse);
+  rpc GetRecipe (GetRecipeRequest) returns (GetRecipeResponse);
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc CreateRecipe (CreateRecipeRequest) returns (CreateRecipeResponse);
+  rpc UpdateRecipe (UpdateRecipeRequest) returns (UpdateRecipeResponse);
+  rpc DeleteRecipe (DeleteRecipeRequest) returns (DeleteRecipeResponse);
+}

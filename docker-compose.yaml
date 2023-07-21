@@ -1,0 +1,37 @@
+version: "3"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - recitas-network
+    environment:
+      - DSN=host=postgres port=5432 dbname=db1 user=user1 password=test1 sslmode=disable application_name=recitas
+      - SIGNKEY=qazxswedcvfrtgb1234567890+_)(*&^%$#@!
+
+  postgres:
+    image: postgres
+    container_name: recitas_postgres
+    environment:
+      - POSTGRES_PASSWORD=test1
+      - POSTGRES_USER=user1
+      - POSTGRES_DB=db1
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+#      pg-data:
+#        name: pg-data
+#      - ./postgres-data:/var/lib/postgresql/data
+      - ./sql/rollup.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    networks:
+      - recitas-network
+
+networks:
+  recitas-network:
+#    external: true
